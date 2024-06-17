@@ -1,4 +1,4 @@
-# prueba-tecnica-honei
+# Prueba-tecnica-honei
 # 🎲 Servicio de Suma Aleatoria
 
 Este proyecto crea un servicio en Node.js que genera un conjunto de números aleatorios y los suma de manera eficiente utilizando procesamiento paralelo.
@@ -8,7 +8,6 @@ Este proyecto crea un servicio en Node.js que genera un conjunto de números ale
 - [Instalación](#instalación)
 - [Uso](#uso)
 - [Estructura del Proyecto](#estructura-del-proyecto)
-- [Detalles de Implementación](#detalles-de-implementación)
 - [Licencia](#licencia)
 
 ## ⚙️ Instalación
@@ -60,21 +59,30 @@ Este proyecto crea un servicio en Node.js que genera un conjunto de números ale
 
 ### 1. Carpeta /utils 📂
 - `generateRandomArray.js` Contiene la función para generar el arreglo de números aleatorios.
-- `sumArray.js` Contiene la función para sumar el arreglo de números en el lote, esta funcion es usada por cada Worker
-- `sumArrayParallel.js` Contiene la función para iniciar diferentes workers con la suma de cada lote. Calcula el número de lotes necesarios y luego los recorre y comienza el Worker pasándoles los diferentes números que contiene cada lote en paralelo.
+- `sumArray.js` Contiene la función para sumar el arreglo de números en el lote/batch, esta funcion es usada por cada Worker
+- `sumArrayParallel.js` Contiene la función para inicializar diferentes workers con el arreglo de numeros de cada lote/batch en paralelo.
 
     ```js
-    const worker = new Worker('./worker.js', {
-                workerData: { batch }
-            });
+        const worker = new Worker('./worker.js', {
+                    workerData: { batch }
+                });
     ```
+    La función recibe el arreglo de numeros aleatorios generados y el tamaño de cada lote/batch por parametro para que pueda procesarlos.
+
+    Calcula y divide el número de lotes necesarios, luego los recorre y va añadidendo el resultado al total de la suma en el instante que recibe el evento de mensaje de un Worker : 
+    ```js
+    worker.on('message')
+    ```
+    Hasta que el numero de lotes restantes finalize y resuelve la promesa final con suma del total de cada lote/batch
+
+
 
 ### 2. Server.js
 - Configura el servidor Express con un endpoint POST `/generate-and-sum`.
 - Valida el parámetro `count` del cuerpo de la solicitud.
 - Genera un arreglo de números aleatorios.
 - Divide el arreglo en lotes más pequeños y usa hilos de trabajo para sumar cada lote.
-- Combina los resultados de todos los lotes y envía la suma final como respuesta.
+- Combina los resultados de todos los lotes y envía la suma final como respuesta como JSON.
 
 ### 3. Worker.js
 - Recibe un lote de números del hilo principal.
