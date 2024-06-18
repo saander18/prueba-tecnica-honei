@@ -4,10 +4,10 @@ function averagePair(input, target) {
     }
 
     let left = 0;
-    let right = input.length - 1;
+    let right = input.length;
 
     while (left < right) {
-        const avg = (input[left] + input[right]) / 2;
+        const avg = average(input[left], input[right])
         if (avg === target) {
             return true;
         } else if (avg < target) {
@@ -18,6 +18,10 @@ function averagePair(input, target) {
     }
 
     return false;
+}
+
+function average(left, right) {
+    return (left + right) / 2;
 }
 
 module.exports = {

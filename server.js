@@ -4,6 +4,7 @@ const { generateRandomArray } = require('./utils/generateRandomArray');
 const { sumArrayInParallel } = require('./utils/sumArrayParallel');
 const { highestOccurrence } = require('./optional/highestOccurrence');
 const { averagePair } = require('./optional/averagePair');
+const { maxSubarraySum } = require('./optional/maxSubArray');
 
 const app = express();
 const port = 3000;
@@ -27,6 +28,15 @@ app.post('/average-pair', (req, res) => {
     }
 
     const result = averagePair(input, target);
+    res.json({ result });
+});
+
+app.post('/max-sum-array', (req, res) => {
+    const { input, maxLength } = req.body;
+    console.log(req.body)
+   
+
+    const result = maxSubarraySum(input, maxLength);
     res.json({ result });
 });
 
